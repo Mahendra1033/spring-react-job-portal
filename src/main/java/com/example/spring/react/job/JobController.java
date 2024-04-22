@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/jobs")
+@RequestMapping("/api/v1/jobs")
 public class JobController {
 
     private final JobService jobService;
@@ -35,8 +35,8 @@ public class JobController {
     }
 
     @DeleteMapping("{id}")
-    public String deleteJob(@PathVariable("id") Long jobId){
-        return jobService.deleteJob(jobId);
+    public void deleteJob(@PathVariable("id") Long jobId){
+        jobService.deleteJob(jobId);
     }
 
 }

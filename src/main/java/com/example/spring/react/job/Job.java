@@ -27,9 +27,12 @@ public class Job {
             strategy = SEQUENCE
     )
     private Long id;
-    private String name;
+    private String title;
+    private String type;
     private String description;
     private String location;
     private String salary;
+    @Embedded
+    private Company company;
 
 }

@@ -1,5 +1,6 @@
 package com.example.spring.react.job;
 
+import jakarta.persistence.Embedded;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,22 +13,35 @@ public class JobService {
     public JobService(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
     }
-
+    private Long id;
+    private String title;
+    private String type;
+    private String description;
+    private String location;
+    private String salary;
+    @Embedded
+    private Company company;
     public JobResponse createJob(JobRequest jobRequest) {
+
         Job job = Job.builder()
-                .name(jobRequest.name())
+                .title(jobRequest.title())
+                .type(jobRequest.type())
                 .description(jobRequest.description())
                 .location(jobRequest.location())
                 .salary(jobRequest.salary())
+                .company(jobRequest.company())
                 .build();
+
         jobRepository.save(job);
 
         JobResponse jobResponse = new JobResponse(
                 job.getId(),
-                job.getName(),
+                job.getTitle(),
+                job.getType(),
                 job.getDescription(),
                 job.getLocation(),
-                job.getSalary()
+                job.getSalary(),
+                job.getCompany()
         );
         return jobResponse;
     }
@@ -38,10 +52,12 @@ public class JobService {
                 .stream()
                 .map(job -> new JobResponse(
                         job.getId(),
-                        job.getName(),
+                        job.getTitle(),
+                        job.getType(),
                         job.getDescription(),
                         job.getLocation(),
-                        job.getSalary()
+                        job.getSalary(),
+                        job.getCompany()
                 )).toList();
 
         return jobsList;
@@ -54,10 +70,12 @@ public class JobService {
         }
         JobResponse jobResponse = new JobResponse(
                 job.get().getId(),
-                job.get().getName(),
+                job.get().getTitle(),
+                job.get().getType(),
                 job.get().getDescription(),
                 job.get().getLocation(),
-                job.get().getSalary()
+                job.get().getSalary(),
+                job.get().getCompany()
         );
         return jobResponse;
     }
@@ -70,26 +88,29 @@ public class JobService {
 
         Job updatedJob = Job.builder()
                 .id(jobRequest.id())
-                .name(jobRequest.name())
+                .title(jobRequest.title())
+                .type(jobRequest.type())
                 .description(jobRequest.description())
                 .location(jobRequest.location())
                 .salary(jobRequest.salary())
+                .company(jobRequest.company())
                 .build();
 
         jobRepository.save(updatedJob);
 
         JobResponse updatedJobResponse = new JobResponse(
                 updatedJob.getId(),
-                updatedJob.getName(),
+                updatedJob.getTitle(),
+                updatedJob.getType(),
                 updatedJob.getDescription(),
                 updatedJob.getLocation(),
-                updatedJob.getSalary()
+                updatedJob.getSalary(),
+                updatedJob.getCompany()
         );
         return updatedJobResponse;
     }
 
-    public String deleteJob(Long jobId) {
+    public void deleteJob(Long jobId) {
         jobRepository.deleteById(jobId);
-        return "Job with the id "+jobId+" is deleted";
     }
 }
